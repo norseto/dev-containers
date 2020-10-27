@@ -1,0 +1,68 @@
+name: Golang with Cloud Provider Dev Image
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ feature/* ]
+    paths:
+    - providers/Dockerfile
+    - .github/workflows/cloud-images.yml
+  pull_request:
+    branches: [ develop ]
+    paths:
+    - providers/*
+
+env:
+  REGISTRY: norseto
+  TEST_REGISTRY: norseto/test
+  DOCKERFILE: ./providers/Dockerfile
+
+jobs:
+  path-context:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+        - [ "dev-golang", "gcp,1.15-gcp",     "BASECONTAINER=dev-golang:1.15,INST_GCPSDK=1"]
+        - [ "dev-golang", "aws,1.15-aws",     "BASECONTAINER=dev-golang:1.15,INST_AWSCLI=1"]
+        - [ "dev-golang", "azure,1.15-azure", "BASECONTAINER=dev-golang:1.15,INST_AZURECLI=1"]
+        - [ "dev-golang", "full,1.15-full",   "BASECONTAINER=dev-golang:1.15,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "dev-golang", "1.14-gcp",   "BASECONTAINER=dev-golang:1.14,INST_GCPSDK=1"]
+        - [ "dev-golang", "1.14-aws",   "BASECONTAINER=dev-golang:1.14,INST_AWSCLI=1"]
+        - [ "dev-golang", "1.14-azure", "BASECONTAINER=dev-golang:1.14,INST_AZURECLI=1"]
+        - [ "dev-golang", "1.14-full",  "BASECONTAINER=dev-golang:1.14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+    steps:
+    - uses: actions/checkout@v2
+    - id: imagetag
+      name: Determine Target
+      run: |
+        echo ::set-output name=dockerfile::${DOCKERFILE}
+        MAIN=$(echo "${GITHUB_REF}" | grep -e "/main$">/dev/null; echo $?)
+        if [ $MAIN -eq 1 ] ; then
+          TAG=$(echo ${{ matrix.target[1] }} | awk -F, '{for (i=1; i<=NF; i++){printf("${{ matrix.target[0] }}-%s,", $i);}}' | sed -e 's/,$//')
+          echo ::set-output name=tag::${TAG}
+          echo ::set-output name=repository::${TEST_REGISTRY}
+          echo ::set-output name=cache::${TEST_REGISTRY}:${{ matrix.target[0] }}-${{ matrix.target[1] }}
+        else
+          echo ::set-output name=repository::${REGISTRY}/${{ matrix.target[0] }}
+          echo ::set-output name=tag::${{ matrix.target[1] }}
+          echo ::set-output name=cache::""
+        fi
+        if [ ${GITHUB_EVENT_NAME} = "push" ] || [ ${GITHUB_EVENT_NAME} = "workflow_dispatch" ] ; then
+          echo ::set-output name=pushimg::true
+        else
+          echo ::set-output name=pushimg::false
+        fi
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        path: .
+        repository: ${{ steps.imagetag.outputs.repository }}
+        dockerfile: ${{ steps.imagetag.outputs.dockerfile }}
+        tags: ${{ steps.imagetag.outputs.tag }}
+        build_args: ${{ matrix.target[2] }}
+        push: ${{ steps.imagetag.outputs.pushimg }}
+        cache_froms: ${{ steps.imagetag.outputs.cache }}
+
