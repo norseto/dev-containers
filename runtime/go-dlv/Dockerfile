@@ -2,7 +2,7 @@ ARG VARIANT=1.14-alpine
 FROM golang:${VARIANT}
 
 # Download the dlv (delve) debugger for go (you can comment this out if unused)
-RUN apk add git && go get -u -v github.com/go-delve/delve/cmd/dlv
+RUN apk add git && go get -u -v github.com/go-delve/delve/cmd/dlv && rm -rf /go/src
 
 # If you want to use the debugger, you need to modify the entrypoint to the
 # container and point it to the "dlv debug" command:
