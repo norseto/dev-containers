@@ -1,21 +1,21 @@
-name: '[SCW] Golang with Cloud Provider Dev Image'
+name: '[SCW] Terraform 0.12 Dev Image'
 
 on:
   workflow_dispatch: {}
   push:
     branches: [ feature/* ]
     paths:
-    - providers/Dockerfile
-    - .github/workflows/cloud-images_scw.yml
+    - terraform/Dockerfile
+    - .github/workflows/terraform012-images_scw.yml
   pull_request:
     branches: [ develop ]
     paths:
-    - providers/*
+    - terraform/*
 
 env:
   REGISTRY:      rg.fr-par.scw.cloud/peppy-ratio
   TEST_REGISTRY: rg.fr-par.scw.cloud/peppy-ratio-test
-  DOCKERFILE: ./providers/Dockerfile
+  DOCKERFILE: ./terraform/Dockerfile
 
 jobs:
   path-context:
@@ -23,14 +23,11 @@ jobs:
     strategy:
       matrix:
         target:
-        - [ "gcp/golang",   "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_GCPSDK=1"]
-        - [ "aws/golang",   "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_AWSCLI=1"]
-        - [ "azure/golang", "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_AZURECLI=1"]
-        - [ "full/golang",  "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
-        - [ "gcp/golang",   "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_GCPSDK=1"]
-        - [ "aws/golang",   "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_AWSCLI=1"]
-        - [ "azure/golang", "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_AZURECLI=1"]
-        - [ "full/golang",  "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "base/terraform",  "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/k8s:latest"]
+        - [ "gcp/terraform",   "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/gcp/base:latest"]
+        - [ "aws/terraform",   "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/aws/base:latest"]
+        - [ "azure/terraform", "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/azure/base:latest"]
+        - [ "full/terraform",  "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/full/base:latest"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag

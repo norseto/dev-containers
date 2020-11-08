@@ -6,7 +6,7 @@ on:
     branches: [ feature/* ]
     paths:
     - terraform/Dockerfile
-    - .github/workflows/terraform-images.yml
+    - .github/workflows/terraform012-images.yml
   pull_request:
     branches: [ develop ]
     paths:
