@@ -1,0 +1,63 @@
+name: '[SCW] Base Kubernetes Dev Image'
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ feature/* ]
+    paths:
+    - base/Dockerfile
+    - .github/workflows/base-images_scw.yml
+  pull_request:
+    branches: [ develop ]
+    paths:
+    - base/*
+
+env:
+  REGISTRY:      rg.fr-par.scw.cloud/peppy-ratio
+  TEST_REGISTRY: rg.fr-par.scw.cloud/peppy-ratio-test
+  DOCKERFILE:    ./base/Dockerfile
+
+jobs:
+  path-context:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+        - [ "base/k8s",        "latest",      ""]
+        - [ "base/golang",     "1.14",        "BASECONTAINER=go:1.14"]
+        - [ "base/golang",     "latest,1.15", "BASECONTAINER=go:1.15"]
+        - [ "base/dotnetcore", "latest,3.1",  "BASECONTAINER=dotnetcore:3.1"]
+    steps:
+    - uses: actions/checkout@v2
+    - id: imagetag
+      name: Determine Target
+      run: |
+        echo ::set-output name=dockerfile::${DOCKERFILE}
+        MAIN=$(echo "${GITHUB_REF}" | grep -e "/main$">/dev/null; echo $?)
+        if [ $MAIN -eq 1 ] ; then
+          echo ::set-output name=registry::${TEST_REGISTRY}
+        else
+          echo ::set-output name=registry::${REGISTRY}
+        fi
+        echo ::set-output name=repository::${{ matrix.target[0] }}
+        echo ::set-output name=tag::${{ matrix.target[1] }}
+        echo ::set-output name=cache::""
+        if [ ${GITHUB_EVENT_NAME} = "push" ] || [ ${GITHUB_EVENT_NAME} = "workflow_dispatch" ] ; then
+          echo ::set-output name=pushimg::true
+        else
+          echo ::set-output name=pushimg::false
+        fi
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.SCALEWAY_USERNAME }}
+        password: ${{ secrets.SCALEWAY_TOKEN }}
+        path: .
+        registry:    ${{ steps.imagetag.outputs.registry }}
+        repository:  ${{ steps.imagetag.outputs.repository }}
+        dockerfile:  ${{ steps.imagetag.outputs.dockerfile }}
+        tags:        ${{ steps.imagetag.outputs.tag }}
+        build_args:  ${{ matrix.target[2] }}
+        push:        ${{ steps.imagetag.outputs.pushimg }}
+        cache_froms: ${{ steps.imagetag.outputs.cache }}
+
