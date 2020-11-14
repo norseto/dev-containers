@@ -24,7 +24,7 @@ jobs:
       matrix:
         target:
         - [ "dev-base",       "k8s",  ""]
-        - [ "dev-golang",     "1.14", "BASECONTAINER=go:1.14"]
+        - [ "dev-golang",     "1.14",        "BASECONTAINER=go:1.14"]
         - [ "dev-golang",     "latest,1.15", "BASECONTAINER=go:1.15"]
         - [ "dev-dotnetcore", "latest,3.1",  "BASECONTAINER=dotnetcore:3.1"]
     steps:

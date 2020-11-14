@@ -1,4 +1,4 @@
-name: '[SCW] Golang with Cloud Provider Dev Image'
+name: '[SCW] Node with Cloud Provider Dev Image'
 
 on:
   workflow_dispatch: {}
@@ -6,7 +6,7 @@ on:
     branches: [ feature/* ]
     paths:
     - providers/Dockerfile
-    - .github/workflows/go-cloud-images_scw.yml
+    - .github/workflows/node-cloud-images_scw.yml
   pull_request:
     branches: [ develop ]
     paths:
@@ -23,14 +23,14 @@ jobs:
     strategy:
       matrix:
         target:
-        - [ "gcp/golang",   "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_GCPSDK=1"]
-        - [ "aws/golang",   "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_AWSCLI=1"]
-        - [ "azure/golang", "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_AZURECLI=1"]
-        - [ "full/golang",  "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
-        - [ "gcp/golang",   "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_GCPSDK=1"]
-        - [ "aws/golang",   "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_AWSCLI=1"]
-        - [ "azure/golang", "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_AZURECLI=1"]
-        - [ "full/golang",  "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "gcp/node",   "latest,14", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:14,INST_GCPSDK=1"]
+        - [ "aws/node",   "latest,14", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:14,INST_AWSCLI=1"]
+        - [ "azure/node", "latest,14", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:14,INST_AZURECLI=1"]
+        - [ "full/node",  "latest,14", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "gcp/node",   "12",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:12,INST_GCPSDK=1"]
+        - [ "aws/node",   "12",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:12,INST_AWSCLI=1"]
+        - [ "azure/node", "12",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:12,INST_AZURECLI=1"]
+        - [ "full/node",  "12",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/node:12,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag

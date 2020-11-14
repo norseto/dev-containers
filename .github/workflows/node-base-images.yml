@@ -1,21 +1,21 @@
-name: Golang with Cloud Provider Dev Image
+name: Base Kubernetes Dev Image with Node
 
 on:
   workflow_dispatch: {}
   push:
     branches: [ feature/* ]
     paths:
-    - providers/Dockerfile
-    - .github/workflows/go-cloud-images.yml
+    - base/Dockerfile
+    - .github/workflows/node-base-images.yml
   pull_request:
     branches: [ develop ]
     paths:
-    - providers/*
+    - base/*
 
 env:
   REGISTRY: norseto
   TEST_REGISTRY: norseto/test
-  DOCKERFILE: ./providers/Dockerfile
+  DOCKERFILE: ./base/Dockerfile
 
 jobs:
   path-context:
@@ -23,14 +23,8 @@ jobs:
     strategy:
       matrix:
         target:
-        - [ "dev-golang", "gcp,1.15-gcp",     "BASECONTAINER=dev-golang:1.15,INST_GCPSDK=1"]
-        - [ "dev-golang", "aws,1.15-aws",     "BASECONTAINER=dev-golang:1.15,INST_AWSCLI=1"]
-        - [ "dev-golang", "azure,1.15-azure", "BASECONTAINER=dev-golang:1.15,INST_AZURECLI=1"]
-        - [ "dev-golang", "full,1.15-full",   "BASECONTAINER=dev-golang:1.15,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
-        - [ "dev-golang", "1.14-gcp",   "BASECONTAINER=dev-golang:1.14,INST_GCPSDK=1"]
-        - [ "dev-golang", "1.14-aws",   "BASECONTAINER=dev-golang:1.14,INST_AWSCLI=1"]
-        - [ "dev-golang", "1.14-azure", "BASECONTAINER=dev-golang:1.14,INST_AZURECLI=1"]
-        - [ "dev-golang", "1.14-full",  "BASECONTAINER=dev-golang:1.14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "dev-node",       "latest,14",   "BASECONTAINER=javascript-node:14"]
+        - [ "dev-node",       "12",          "BASECONTAINER=javascript-node:12"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag

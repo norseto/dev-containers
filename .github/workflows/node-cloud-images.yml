@@ -1,4 +1,4 @@
-name: Golang with Cloud Provider Dev Image
+name: Node with Cloud Provider Dev Image
 
 on:
   workflow_dispatch: {}
@@ -6,7 +6,7 @@ on:
     branches: [ feature/* ]
     paths:
     - providers/Dockerfile
-    - .github/workflows/go-cloud-images.yml
+    - .github/workflows/node-cloud-images.yml
   pull_request:
     branches: [ develop ]
     paths:
@@ -23,14 +23,14 @@ jobs:
     strategy:
       matrix:
         target:
-        - [ "dev-golang", "gcp,1.15-gcp",     "BASECONTAINER=dev-golang:1.15,INST_GCPSDK=1"]
-        - [ "dev-golang", "aws,1.15-aws",     "BASECONTAINER=dev-golang:1.15,INST_AWSCLI=1"]
-        - [ "dev-golang", "azure,1.15-azure", "BASECONTAINER=dev-golang:1.15,INST_AZURECLI=1"]
-        - [ "dev-golang", "full,1.15-full",   "BASECONTAINER=dev-golang:1.15,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
-        - [ "dev-golang", "1.14-gcp",   "BASECONTAINER=dev-golang:1.14,INST_GCPSDK=1"]
-        - [ "dev-golang", "1.14-aws",   "BASECONTAINER=dev-golang:1.14,INST_AWSCLI=1"]
-        - [ "dev-golang", "1.14-azure", "BASECONTAINER=dev-golang:1.14,INST_AZURECLI=1"]
-        - [ "dev-golang", "1.14-full",  "BASECONTAINER=dev-golang:1.14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "dev-node", "gcp,14-gcp",     "BASECONTAINER=dev-node:14,INST_GCPSDK=1"]
+        - [ "dev-node", "aws,14-aws",     "BASECONTAINER=dev-node:14,INST_AWSCLI=1"]
+        - [ "dev-node", "azure,14-azure", "BASECONTAINER=dev-node:14,INST_AZURECLI=1"]
+        - [ "dev-node", "full,14-full",   "BASECONTAINER=dev-node:14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "dev-node", "12-gcp",         "BASECONTAINER=dev-node:12,INST_GCPSDK=1"]
+        - [ "dev-node", "12-aws",         "BASECONTAINER=dev-node:12,INST_AWSCLI=1"]
+        - [ "dev-node", "12-azure",       "BASECONTAINER=dev-node:12,INST_AZURECLI=1"]
+        - [ "dev-node", "12-full",        "BASECONTAINER=dev-node:12,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag

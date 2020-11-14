@@ -1,21 +1,21 @@
-name: '[SCW] Golang with Cloud Provider Dev Image'
+name: '[SCW] Base Kubernetes Dev Image with Node'
 
 on:
   workflow_dispatch: {}
   push:
     branches: [ feature/* ]
     paths:
-    - providers/Dockerfile
-    - .github/workflows/go-cloud-images_scw.yml
+    - base/Dockerfile
+    - .github/workflows/node-base-images_scw.yml
   pull_request:
     branches: [ develop ]
     paths:
-    - providers/*
+    - base/*
 
 env:
   REGISTRY:      rg.fr-par.scw.cloud/peppy-ratio
   TEST_REGISTRY: rg.fr-par.scw.cloud/peppy-ratio-test
-  DOCKERFILE: ./providers/Dockerfile
+  DOCKERFILE:    ./base/Dockerfile
 
 jobs:
   path-context:
@@ -23,14 +23,8 @@ jobs:
     strategy:
       matrix:
         target:
-        - [ "gcp/golang",   "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_GCPSDK=1"]
-        - [ "aws/golang",   "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_AWSCLI=1"]
-        - [ "azure/golang", "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_AZURECLI=1"]
-        - [ "full/golang",  "latest,1.15", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.15,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
-        - [ "gcp/golang",   "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_GCPSDK=1"]
-        - [ "aws/golang",   "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_AWSCLI=1"]
-        - [ "azure/golang", "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_AZURECLI=1"]
-        - [ "full/golang",  "1.14",        "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/golang:1.14,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
+        - [ "base/node",       "latest,14",   "BASECONTAINER=javascript-node:14"]
+        - [ "base/node",       "12",          "BASECONTAINER=javascript-node:12"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag
