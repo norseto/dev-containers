@@ -1,5 +1,9 @@
 ARG BASECONTAINER
 ARG BASECONTAINER_REPO=norseto/${BASECONTAINER:-"dev-base:k8s"}
+
+FROM golang:latest as docs
+RUN GO111MODULE="on" go get github.com/terraform-docs/terraform-docs@v0.10.1
+
 FROM ${BASECONTAINER_REPO}
 
 # Avoid warnings by switching to noninteractive
@@ -12,6 +16,7 @@ ARG TERRAGRUNT_VERSION=0.25.2
 
 ARG INST_TERRAFORM=1
 
+COPY --from=docs /go/bin/terraform-docs /usr/local/bin/
 # Configure apt and install packages
 RUN apt-get update \
     #
