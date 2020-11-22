@@ -1,4 +1,4 @@
-name: '[SCW] Base Kubernetes Dev Image'
+name: '01 [SCW] Base Kubernetes Dev Image'
 
 on:
   workflow_dispatch: {}

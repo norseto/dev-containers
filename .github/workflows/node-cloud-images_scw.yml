@@ -1,4 +1,4 @@
-name: '[SCW] Node with Cloud Provider Dev Image'
+name: '02 [SCW] Node with Cloud Provider Dev Image'
 
 on:
   workflow_dispatch: {}

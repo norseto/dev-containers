@@ -1,4 +1,4 @@
-name: '[SCW] Golang with Cloud Provider Dev Image'
+name: '02 [SCW] Golang with Cloud Provider Dev Image'
 
 on:
   workflow_dispatch: {}

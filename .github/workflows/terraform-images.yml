@@ -1,4 +1,4 @@
-name: Terraform Dev Image
+name: 02 Terraform Dev Image
 
 on:
   workflow_dispatch: {}

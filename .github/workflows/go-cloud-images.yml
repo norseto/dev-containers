@@ -1,4 +1,4 @@
-name: Golang with Cloud Provider Dev Image
+name: 02 Golang with Cloud Provider Dev Image
 
 on:
   workflow_dispatch: {}
