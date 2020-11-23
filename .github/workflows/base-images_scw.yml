@@ -27,6 +27,8 @@ jobs:
         - [ "base/golang",     "1.14",        "BASECONTAINER=go:1.14"]
         - [ "base/golang",     "latest,1.15", "BASECONTAINER=go:1.15"]
         - [ "base/dotnetcore", "latest,3.1",  "BASECONTAINER=dotnetcore:3.1"]
+        - [ "base/node",       "latest,14",   "BASECONTAINER=javascript-node:14"]
+        - [ "base/node",       "12",          "BASECONTAINER=javascript-node:12"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag

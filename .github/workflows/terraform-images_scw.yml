@@ -1,4 +1,4 @@
-name: '02 [SCW] Terraform Dev Image'
+name: '03 [SCW] Terraform Dev Image'
 
 on:
   workflow_dispatch: {}

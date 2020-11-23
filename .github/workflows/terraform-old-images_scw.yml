@@ -1,21 +1,21 @@
-name: '01 [SCW] Base Kubernetes Dev Image with Node'
+name: '03 [SCW] Terraform Old Version Dev Image'
 
 on:
   workflow_dispatch: {}
   push:
     branches: [ feature/* ]
     paths:
-    - base/Dockerfile
-    - .github/workflows/node-base-images_scw.yml
+    - terraform/Dockerfile
+    - .github/workflows/terraform012-images_scw.yml
   pull_request:
     branches: [ develop ]
     paths:
-    - base/*
+    - terraform/*
 
 env:
   REGISTRY:      rg.fr-par.scw.cloud/peppy-ratio
   TEST_REGISTRY: rg.fr-par.scw.cloud/peppy-ratio-test
-  DOCKERFILE:    ./base/Dockerfile
+  DOCKERFILE: ./terraform/Dockerfile
 
 jobs:
   path-context:
@@ -23,8 +23,11 @@ jobs:
     strategy:
       matrix:
         target:
-        - [ "base/node",       "latest,14",   "BASECONTAINER=javascript-node:14"]
-        - [ "base/node",       "12",          "BASECONTAINER=javascript-node:12"]
+        - [ "base/terraform",  "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/k8s:latest"]
+        - [ "gcp/terraform",   "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/gcp/base:latest"]
+        - [ "aws/terraform",   "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/aws/base:latest"]
+        - [ "azure/terraform", "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/azure/base:latest"]
+        - [ "full/terraform",  "0.12", "TERRAFORM_VERSION=0.12.29,BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/full/base:latest"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag

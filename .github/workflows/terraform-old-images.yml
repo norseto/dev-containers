@@ -1,4 +1,4 @@
-name: 02 Terraform 0.12 Dev Image
+name: 03 Terraform Old Version Dev Image
 
 on:
   workflow_dispatch: {}
