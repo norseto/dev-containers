@@ -5,6 +5,10 @@ FROM ${BASECONTAINER_REPO}
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
+ARG ISTIO_VERSION=1.7.5
+ARG ARGOCD_VERSION=1.7.10
+ARG LINKERD2_VERSION=stable-2.9.0
+
 ARG INST_DOCKERCLI=1
 ARG INST_K8SCLIENT=1
 ARG INST_MINIKUBE=1
@@ -86,7 +90,34 @@ RUN apt-get update && apt-get install -y --no-install-recommends bash-completion
       && rm -f minikube \
       && minikube version \
     ; fi \
-    # # Clean up
+    \
+    #--------------------------------------
+    # Istio ctl
+    #--------------------------------------
+    && ( \
+      cd /tmp && curl -L https://istio.io/downloadIstio | sh - \
+      && install /tmp/istio-${ISTIO_VERSION}/bin/istioctl /usr/bin \
+      && rm -rf /tmp/istio-${ISTIO_VERSION} \
+    ) \
+    \
+    #--------------------------------------
+    # Linkerd
+    #--------------------------------------
+    && curl -sL https://run.linkerd.io/install | \
+      LINKERD2_VERSION=${LINKERD2_VERSION} INSTALLROOT=/usr/local sh \
+    \
+    #--------------------------------------
+    # FluxCD
+    #--------------------------------------
+    && curl -s https://toolkit.fluxcd.io/install.sh | bash \
+    \
+    #--------------------------------------
+    # ArgoCD CLI
+    #--------------------------------------
+    && curl -sSL -o /tmp/argocd https://github.com/argoproj/argo-cd/releases/download/v${ARGOCD_VERSION}/argocd-linux-amd64 \
+    && install /tmp/argocd /usr/local/bin && rm -f /tmp/argocd \
+    #
+    # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
