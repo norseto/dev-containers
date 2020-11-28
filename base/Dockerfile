@@ -5,6 +5,7 @@ FROM ${BASECONTAINER_REPO}
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
+ARG HELM_VERSION=3.4.1
 ARG ISTIO_VERSION=1.7.5
 ARG ARGOCD_VERSION=1.7.10
 ARG LINKERD2_VERSION=stable-2.9.0
@@ -116,6 +117,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends bash-completion
     #--------------------------------------
     && curl -sSL -o /tmp/argocd https://github.com/argoproj/argo-cd/releases/download/v${ARGOCD_VERSION}/argocd-linux-amd64 \
     && install /tmp/argocd /usr/local/bin && rm -f /tmp/argocd \
+    \
+    #--------------------------------------
+    # Helm
+    #--------------------------------------
+    && curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | \
+      DESIRED_VERSION=v${HELM_VERSION} bash \
+    && helm repo add stable https://charts.helm.sh/stable \
+    \
     #
     # Clean up
     && apt-get autoremove -y \
