@@ -9,6 +9,7 @@ ARG HELM_VERSION=3.4.1
 ARG ISTIO_VERSION=1.7.5
 ARG ARGOCD_VERSION=1.7.10
 ARG LINKERD2_VERSION=stable-2.9.0
+ARG KN_VERSION=0.20.0
 
 ARG INST_DOCKERCLI=1
 ARG INST_K8SCLIENT=1
@@ -124,6 +125,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends bash-completion
     && curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | \
       DESIRED_VERSION=v${HELM_VERSION} bash \
     && helm repo add stable https://charts.helm.sh/stable \
+    \
+    #--------------------------------------
+    # KNative Client
+    #--------------------------------------
+    && curl -sSL -o /tmp/kn https://github.com/knative/client/releases/download/v${KN_VERSION}/kn-linux-amd64 \
+    && install /tmp/kn /usr/local/bin && rm -f /tmp/kn \
     \
     #
     # Clean up
