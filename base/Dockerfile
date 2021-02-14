@@ -127,7 +127,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends bash-completion
     && helm repo add stable https://charts.helm.sh/stable \
     \
     #--------------------------------------
-    # KNative Client
+    # Knative Client
     #--------------------------------------
     && curl -sSL -o /tmp/kn https://github.com/knative/client/releases/download/v${KN_VERSION}/kn-linux-amd64 \
     && install /tmp/kn /usr/local/bin && rm -f /tmp/kn \

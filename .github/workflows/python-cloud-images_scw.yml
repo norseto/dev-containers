@@ -1,21 +1,21 @@
-name: '01 [SCW] Base Kubernetes Dev Image'
+name: '02 [SCW] Python with Cloud Provider Dev Image'
 
 on:
   workflow_dispatch: {}
   push:
     branches: [ feature/* ]
     paths:
-    - base/Dockerfile
-    - .github/workflows/base-images_scw.yml
+    - providers/Dockerfile
+    - .github/workflows/python-cloud-images_scw.yml
   pull_request:
     branches: [ develop ]
     paths:
-    - base/*
+    - providers/*
 
 env:
   REGISTRY:      rg.fr-par.scw.cloud/peppy-ratio
   TEST_REGISTRY: rg.fr-par.scw.cloud/peppy-ratio-test
-  DOCKERFILE:    ./base/Dockerfile
+  DOCKERFILE: ./providers/Dockerfile
 
 jobs:
   path-context:
@@ -23,13 +23,10 @@ jobs:
     strategy:
       matrix:
         target:
-        - [ "base/k8s",        "latest",       ""]
-        - [ "base/golang",     "1.14",         "BASECONTAINER=go:1.14"]
-        - [ "base/golang",     "latest,1.15",  "BASECONTAINER=go:1.15"]
-        - [ "base/dotnetcore", "latest,3.1",   "BASECONTAINER=dotnetcore:3.1"]
-        - [ "base/node",       "latest,14",    "BASECONTAINER=javascript-node:14"]
-        - [ "base/node",       "12",           "BASECONTAINER=javascript-node:12"]
-        - [ "base/python",     "3.9,3,latest", "BASECONTAINER=python:3.9"]
+        - [ "gcp/python",   "latest,3.9,3", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/python:3.9,INST_GCPSDK=1"]
+        - [ "aws/python",   "latest,3.9,3", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/python:3.9,INST_AWSCLI=1"]
+        - [ "azure/python", "latest,3.9,3", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/python:3.9,INST_AZURECLI=1"]
+        - [ "full/python",  "latest,3.9,3", "BASECONTAINER_REPO=rg.fr-par.scw.cloud/peppy-ratio/base/python:3.9,INST_GCPSDK=1,INST_AWSCLI=1,INST_AZURECLI=1"]
     steps:
     - uses: actions/checkout@v2
     - id: imagetag
